@@ -5,8 +5,8 @@
 
 __name__ = 'blis'
 __title__ = 'blis'
-__version__ = '0.0.1'
-__summary__ = 'Cython bindings for MurmurHash2'
+__version__ = '0.0.2'
+__summary__ = 'Cython bindings for Blis'
 __uri__ = 'https://github.com/spacy-io/cython-blis'
 __author__ = 'Matthew Honnibal'
 __email__ = 'honnibal@gmail.com'
