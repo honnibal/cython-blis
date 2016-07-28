@@ -59,19 +59,20 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 def make_blis(blis_dir, out_dir):
-    print("Compiling Blis")
-    configure_cmd = [path.join(blis_dir, 'configure')]
-    configure_cmd.extend(['-p', out_dir])
-    configure_cmd.append('auto')
-    output = open(os.devnull, 'wb')
-    if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
-        raise EnvironmentError("Error calling 'configure' for BLIS")
-    make_cmd = ['make', '-f', path.join(blis_dir, 'Makefile')]
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
-        raise EnvironmentError("Error calling 'make' for BLIS")
-    make_cmd.append('install')
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
-        raise EnvironmentError("Error calling 'make install' for BLIS")
+    pass
+    #print("Compiling Blis")
+    #configure_cmd = [path.join(blis_dir, 'configure')]
+    #configure_cmd.extend(['-p', out_dir])
+    #configure_cmd.append('auto')
+    #output = open(os.devnull, 'wb')
+    #if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
+    #    raise EnvironmentError("Error calling 'configure' for BLIS")
+    #make_cmd = ['make', '-f', path.join(blis_dir, 'Makefile')]
+    #if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+    #    raise EnvironmentError("Error calling 'make' for BLIS")
+    #make_cmd.append('install')
+    #if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+    #    raise EnvironmentError("Error calling 'make install' for BLIS")
 
 
 def generate_cython(root, source):

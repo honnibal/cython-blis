@@ -151,6 +151,22 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
 
 
 bli_init()
+def init():
+    print("Init")
+    bli_init()
+    assert BLIS_NO_TRANSPOSE == <blis_trans_t>NO_TRANSPOSE
+    assert BLIS_TRANSPOSE == <blis_trans_t>TRANSPOSE
+    assert BLIS_CONJ_NO_TRANSPOSE == <blis_trans_t>CONJ_NO_TRANSPOSE
+    assert BLIS_CONJ_TRANSPOSE == <blis_trans_t>CONJ_TRANSPOSE
+    assert BLIS_NO_CONJUGATE == <blis_conj_t>NO_CONJUGATE
+    assert BLIS_CONJUGATE == <blis_conj_t>CONJUGATE
+    assert BLIS_LEFT == <blis_side_t>LEFT
+    assert BLIS_RIGHT == <blis_side_t>RIGHT
+    assert BLIS_LOWER == <blis_uplo_t>LOWER
+    assert BLIS_UPPER == <blis_uplo_t>UPPER
+    assert BLIS_DENSE == <blis_uplo_t>DENSE
+    assert BLIS_NONUNIT_DIAG == <blis_diag_t>NONUNIT_DIAG
+    assert BLIS_UNIT_DIAG == <blis_diag_t>UNIT_DIAG
 
 
 # BLAS level 3 routines
@@ -227,7 +243,6 @@ cdef void ger(
             m, n,
             &alpha_f,
             &x[0], incx, &y[0], incy, &a[0], rsa, csa, NULL)
-
     elif reals_ft is double1d_t:
         bli_dger(
             <blis_conj_t>conjx, <blis_conj_t>conjy,

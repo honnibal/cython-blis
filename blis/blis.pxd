@@ -29,32 +29,35 @@ ctypedef int inc_t
 ctypedef int doff_t
 
 
+# Sucks to set these from magic numbers, but it's better than dragging
+# the header into our header.
+# We get some piece of mind from checking the values on init.
 cpdef enum trans_t:
-    NO_TRANSPOSE
-    TRANSPOSE
-    CONJ_NO_TRANSPOSE
-    CONJ_TRANSPOSE
+    NO_TRANSPOSE = 0
+    TRANSPOSE = 8
+    CONJ_NO_TRANSPOSE = 16
+    CONJ_TRANSPOSE = 24
 
 
 cpdef enum conj_t:
-    NO_CONJUGATE
-    CONJUGATE
+    NO_CONJUGATE = 0
+    CONJUGATE = 16
 
 
 cpdef enum side_t:
-    LEFT
-    RIGHT
+    LEFT = 0
+    RIGHT = 1
 
 
 cpdef enum uplo_t:
-    LOWER
-    UPPER
-    DENSE
+    LOWER = 192
+    UPPER = 96
+    DENSE = 224
 
 
 cpdef enum diag_t:
-    NONUNIT_DIAG
-    UNIT_DIAG
+    NONUNIT_DIAG = 0
+    UNIT_DIAG = 256
 
 
 cdef void gemm(
@@ -67,7 +70,7 @@ cdef void gemm(
     reals_ft  a, inc_t rsa, inc_t csa,
     reals_ft  b, inc_t rsb, inc_t csb,
     real_ft  beta,
-    reals_ft  c, inc_t rsc, inc_t csc
+    reals_ft  c, inc_t rsc, inc_t csc,
 ) nogil
 
 

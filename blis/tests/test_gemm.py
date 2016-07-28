@@ -16,7 +16,7 @@ def _stretch_matrix(data, m, n):
     data = np.ascontiguousarray(data[:m*n], dtype=data.dtype)
     return data.reshape((m, n)), m, n
 
-def _reshape_for_gemm(A, B, a_rows, a_cols, out_cols, dtype):
+def _reshape_for_gemm(A, B, a_rows, a_cols, out_cols, dtype, trans_a=False, trans_b=False):
     A, a_rows, a_cols = _stretch_matrix(A, a_rows, a_cols)
     if len(B) < a_cols or a_cols < 1:
         return (None, None, None)
@@ -25,6 +25,8 @@ def _reshape_for_gemm(A, B, a_rows, a_cols, out_cols, dtype):
     B = B.reshape((a_cols, b_cols))
     out_cols = B.shape[1]
     C = np.zeros(shape=(A.shape[0] * B.shape[1],), dtype=dtype)
+    if trans_a:
+        A = np.ascontiguousarray(A.T, dtype=dtype)
     return A, B, C
 
 
@@ -51,7 +53,7 @@ def test_memoryview_double_notrans(A, B, a_rows, a_cols, out_cols):
     my_result = C.reshape((A.shape[0], B.shape[1]))
 
     numpy_result = A.dot(B)
-    assert_allclose(numpy_result, my_result, atol=1e-5, rtol=1e-5)
+    assert_allclose(numpy_result, my_result, atol=1e-4, rtol=1e-4)
 
 
 @given(
@@ -77,4 +79,4 @@ def test_memoryview_float_notrans(A, B, a_rows, a_cols, out_cols):
     my_result = C.reshape((A.shape[0], B.shape[1]))
 
     numpy_result = A.dot(B)
-    assert_allclose(numpy_result, my_result, atol=1e-5, rtol=1e-5)
+    assert_allclose(numpy_result, my_result, atol=1e-3, rtol=1e-3)
