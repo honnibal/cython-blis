@@ -32,9 +32,10 @@ MOD_NAMES = [
 # By subclassing build_extensions we have the actual compiler that will be used which is really known only after finalize_options
 # http://stackoverflow.com/questions/724664/python-distutils-how-to-get-a-compiler-that-is-going-to-be-used
 compile_options =  {'msvc'  : ['/Ox', '/EHsc'],
-                    'other' : ['-O2', '-Wno-strict-prototypes', '-Wno-unused-function']}
+                    'other' : ['-O2', '-Wno-strict-prototypes', '-Wno-unused-function',
+                               '-std=c11']}
 link_options    =  {'msvc'  : [],
-                    'other' : []}
+                    'other' : ['-std=c11']}
 
 class build_ext_options:
     def build_options(self):
