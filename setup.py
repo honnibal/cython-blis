@@ -32,10 +32,10 @@ MOD_NAMES = [
 # By subclassing build_extensions we have the actual compiler that will be used which is really known only after finalize_options
 # http://stackoverflow.com/questions/724664/python-distutils-how-to-get-a-compiler-that-is-going-to-be-used
 compile_options =  {'msvc'  : ['/Ox', '/EHsc'],
-                    'other' : ['-O2', '-Wno-strict-prototypes', '-Wno-unused-function',
+                    'other' : ['-O2', '-fPIC', '-Wno-strict-prototypes', '-Wno-unused-function',
                                '-std=c11']}
 link_options    =  {'msvc'  : [],
-                    'other' : ['-std=c11']}
+                    'other' : ['-std=c11', '-fPIC']}
 
 class build_ext_options:
     def build_options(self):
@@ -59,20 +59,19 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 def make_blis(blis_dir, out_dir):
-    pass
-    #print("Compiling Blis")
-    #configure_cmd = [path.join(blis_dir, 'configure')]
-    #configure_cmd.extend(['-p', out_dir])
-    #configure_cmd.append('auto')
-    #output = open(os.devnull, 'wb')
-    #if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
-    #    raise EnvironmentError("Error calling 'configure' for BLIS")
-    #make_cmd = ['make', '-f', path.join(blis_dir, 'Makefile')]
-    #if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
-    #    raise EnvironmentError("Error calling 'make' for BLIS")
-    #make_cmd.append('install')
-    #if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
-    #    raise EnvironmentError("Error calling 'make install' for BLIS")
+    print("Compiling Blis")
+    configure_cmd = [path.join(blis_dir, 'configure')]
+    configure_cmd.extend(['-p', out_dir])
+    configure_cmd.append('auto')
+    output = open(os.devnull, 'wb')
+    if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
+        raise EnvironmentError("Error calling 'configure' for BLIS")
+    make_cmd = ['make', '-f', path.join(blis_dir, 'Makefile')]
+    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+        raise EnvironmentError("Error calling 'make' for BLIS")
+    make_cmd.append('install')
+    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+        raise EnvironmentError("Error calling 'make install' for BLIS")
 
 
 def generate_cython(root, source):
