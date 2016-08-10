@@ -149,6 +149,27 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
        blis_cntx_t* cntx
     )
 
+    void bli_ddotv(
+       blis_conj_t  conjx,
+       blis_conj_t  conjy,
+       dim_t   m,
+       double*  x, inc_t incx,
+       double*  y, inc_t incy,
+       double*  rho,
+       blis_cntx_t* cntx
+    )
+    
+    void bli_sdotv(
+       blis_conj_t  conjx,
+       blis_conj_t  conjy,
+       dim_t   m,
+       float*  x, inc_t incx,
+       float*  y, inc_t incy,
+       float*  rho,
+       blis_cntx_t* cntx
+     )
+
+
 
 bli_init()
 def init():
@@ -340,6 +361,36 @@ cdef void scalv(
         bli_sscalv(<blis_conj_t>conjalpha, m, &alpha_f, &x[0], incx, NULL)
     elif reals_ft is double1d_t:
         bli_dscalv(<blis_conj_t>conjalpha, m, &alpha_d, &x[0], incx, NULL)
+    else:
+        # Impossible --- panic?
+        pass
+
+
+cdef double dotv(
+    conj_t  conjx,
+    conj_t  conjy,
+    dim_t   m,
+    reals_ft x,
+    reals_ft y,
+    inc_t incx,
+    inc_t incy,
+) nogil:
+    cdef double rho_d = 0.0
+    cdef float rho_f = 0.0
+    if reals_ft is floats_t:
+        bli_sdotv(<blis_conj_t>conjx, <blis_conj_t>conjy, m, x, incx, y, incy, &rho_f, NULL)
+        return rho_d
+    elif reals_ft is doubles_t:
+        bli_ddotv(<blis_conj_t>conjx, <blis_conj_t>conjy, m, x, incx, y, incy, &rho_d, NULL)
+        return rho_d
+    elif reals_ft is float1d_t:
+        bli_sdotv(<blis_conj_t>conjx, <blis_conj_t>conjy, m, &x[0], incx, &y[0], incy,
+                  &rho_f, NULL)
+        return rho_f
+    elif reals_ft is double1d_t:
+        bli_ddotv(<blis_conj_t>conjx, <blis_conj_t>conjy, m, &x[0], incx, &y[0], incy,
+                  &rho_d, NULL)
+        return rho_f
     else:
         # Impossible --- panic?
         pass
