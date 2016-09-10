@@ -52,12 +52,12 @@ DEBUG_TYPE      := off
 CC              := 
 
 # The requested threading model.
-THREADING_MODEL := no
+THREADING_MODEL := omp
 
 # The install prefix tell us where to install the libraries and header file
 # directory. Notice that we support the use of DESTDIR so that advanced users
 # may install to a temporary location.
-INSTALL_PREFIX := $(DESTDIR)../_lib
+INSTALL_PREFIX := $(DESTDIR)../lib
 
 # Variables corresponding to other configure-time options.
 BLIS_ENABLE_VERBOSE_MAKE_OUTPUT := no

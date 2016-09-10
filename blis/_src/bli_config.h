@@ -39,13 +39,13 @@
 #define BLIS_ENABLE_PTHREADS
 #endif
 
-#if 0
+#if 1
 #define BLIS_ENABLE_OPENMP
 #endif
 
-#if 0 == 64
+#if 64 == 64
 #define BLIS_INT_TYPE_SIZE 64
-#elif 0 == 32
+#elif 64 == 32
 #define BLIS_INT_TYPE_SIZE 32
 #else
 // determine automatically
@@ -61,7 +61,7 @@
 
 #ifndef BLIS_ENABLE_BLAS2BLIS
 #ifndef BLIS_DISABLE_BLAS2BLIS
-#if 1
+#if 0
 #define BLIS_ENABLE_BLAS2BLIS
 #else
 #define BLIS_DISABLE_BLAS2BLIS
