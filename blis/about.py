@@ -11,4 +11,4 @@ __uri__ = 'https://github.com/spacy-io/cython-blis'
 __author__ = 'Matthew Honnibal'
 __email__ = 'honnibal@gmail.com'
 __license__ = 'MIT'
-__release__ = False
+__release__ = True
