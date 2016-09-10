@@ -33,8 +33,11 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
         BLIS_NONUNIT_DIAG
         BLIS_UNIT_DIAG
 
+    char* bli_info_get_int_type_size_str()
+    
     blis_err_t bli_init()
     blis_err_t bli_finalize()
+    
 
     # BLAS level 3 routines
     void bli_dgemm(
@@ -188,6 +191,11 @@ def init():
     assert BLIS_DENSE == <blis_uplo_t>DENSE
     assert BLIS_NONUNIT_DIAG == <blis_diag_t>NONUNIT_DIAG
     assert BLIS_UNIT_DIAG == <blis_diag_t>UNIT_DIAG
+
+
+def get_int_type_size():
+    cdef char* int_size = bli_info_get_int_type_size_str()
+    return '%d' % int_size[0]
 
 
 # BLAS level 3 routines
