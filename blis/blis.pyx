@@ -1,6 +1,9 @@
 # cython: infer_types=True
 # cython: boundscheck=False
 
+import atexit
+
+
 cdef extern from "_ext/include/blis/blis.h" nogil:
     enum blis_err_t "err_t": 
         pass
@@ -176,7 +179,6 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
 
 bli_init()
 def init():
-    print("Init")
     bli_init()
     assert BLIS_NO_TRANSPOSE == <blis_trans_t>NO_TRANSPOSE
     assert BLIS_TRANSPOSE == <blis_trans_t>TRANSPOSE
@@ -418,3 +420,8 @@ def gemm_(
 ):
     gemm(trans_a, trans_b, m, n, k, alpha, a, rsa, csa, b, rsb, csb, beta, c,
          rsc, csc)
+
+
+@atexit.register
+def finalize():
+    bli_finalize()
