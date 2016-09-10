@@ -1,4 +1,5 @@
 from cython cimport view
+from libc.stdint cimport int64_t
 
 
 ctypedef float[:] float1d_t
@@ -24,9 +25,9 @@ cdef fused real_ft:
     double
 
 
-ctypedef int dim_t
-ctypedef int inc_t
-ctypedef int doff_t
+ctypedef int64_t dim_t
+ctypedef int64_t inc_t
+ctypedef int64_t doff_t
 
 
 # Sucks to set these from magic numbers, but it's better than dragging
