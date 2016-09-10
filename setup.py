@@ -59,14 +59,21 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 def make_blis(blis_dir, out_dir):
-    print("Compiling Blis")
+    print("Compiling Blis (takes 60 to 120 seconds)")
     configure_cmd = [path.join(blis_dir, 'configure')]
+    configure_cmd.extend(['-i', '64'])
     configure_cmd.extend(['-p', out_dir])
+    configure_cmd.extend(['--disable-blas'])
+    configure_cmd.extend(['--disable-cblas'])
+    if os.environ.get("BLIS_OMP") == '1':
+        configure_cmd.extend(['-t', 'omp'])
+    elif os.environ.get("BLIS_PTHREADS") == '1':
+        configure_cmd.extend(['-t', 'pthreads'])
     configure_cmd.append('auto')
     output = open(os.devnull, 'wb')
     if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'configure' for BLIS")
-    make_cmd = ['make', '-f', path.join(blis_dir, 'Makefile')]
+    make_cmd = ['make', '-j3', '-f', path.join(blis_dir, 'Makefile')]
     if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'make' for BLIS")
     make_cmd.append('install')
