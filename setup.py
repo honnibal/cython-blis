@@ -158,7 +158,7 @@ def setup_package():
             name=about['__title__'],
             zip_safe=True,
             packages=PACKAGES,
-            package_data={'': ['*.pyx', '*.pxd', '_ext/include/*.h'] + src_files},
+            package_data={'': ['*.c', '*.pyx', '*.pxd', '_ext/include/*.h'] + src_files},
             description=about['__summary__'],
             long_description=readme,
             author=about['__author__'],

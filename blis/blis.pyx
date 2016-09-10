@@ -173,8 +173,49 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
        float*  y, inc_t incy,
        float*  rho,
        blis_cntx_t* cntx
-     )
+    )
 
+    void bli_snorm1v(
+       dim_t n,
+       float* x, inc_t incx,
+       float* norm,
+       blis_cntx_t* cntx
+    )
+
+    void bli_dnorm1v(
+       dim_t   n,
+       double* x, inc_t incx,
+       double* norm,
+       blis_cntx_t* cntx
+    )
+
+    void bli_snormfv(
+       dim_t   n,
+       float*  x, inc_t incx,
+       float*  norm,
+       blis_cntx_t* cntx
+    )
+
+    void bli_dnormfv(
+       dim_t   n,
+       double*  x, inc_t incx,
+       double*  norm,
+       blis_cntx_t* cntx
+    )
+    
+    void bli_snormiv(
+       dim_t   n,
+       float*  x, inc_t incx,
+       float*  norm,
+       blis_cntx_t* cntx
+    )
+
+    void bli_dnormiv(
+       dim_t   n,
+       double*  x, inc_t incx,
+       double*  norm,
+       blis_cntx_t* cntx
+    )
 
 
 bli_init()
@@ -374,6 +415,72 @@ cdef void scalv(
     else:
         # Impossible --- panic?
         pass
+
+
+cdef double norm_L1(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil:
+    cdef double dnorm = 0
+    cdef float snorm = 0
+    if reals_ft is floats_t:
+        bli_snorm1v(n, x, incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is doubles_t:
+        bli_dnorm1v(n, x, incx, &dnorm, NULL)
+    elif reals_ft is float1d_t:
+        bli_snorm1v(n, &x[0], incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is double1d_t:
+        bli_dnorm1v(n, &x[0], incx, &dnorm, NULL)
+    else:
+        # Impossible --- panic?
+        pass
+    return dnorm
+
+
+cdef double norm_L2(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil:
+    cdef double dnorm = 0
+    cdef float snorm = 0
+    if reals_ft is floats_t:
+        bli_snormfv(n, x, incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is doubles_t:
+        bli_dnormfv(n, x, incx, &dnorm, NULL)
+    elif reals_ft is float1d_t:
+        bli_snormfv(n, &x[0], incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is double1d_t:
+        bli_dnormfv(n, &x[0], incx, &dnorm, NULL)
+    else:
+        # Impossible --- panic?
+        pass
+    return dnorm
+
+
+cdef double norm_inf(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil:
+    cdef double dnorm = 0
+    cdef float snorm = 0
+    if reals_ft is floats_t:
+        bli_snormiv(n, x, incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is doubles_t:
+        bli_dnormiv(n, x, incx, &dnorm, NULL)
+    elif reals_ft is float1d_t:
+        bli_snormiv(n, &x[0], incx, &snorm, NULL)
+        dnorm = snorm
+    elif reals_ft is double1d_t:
+        bli_dnormiv(n, &x[0], incx, &dnorm, NULL)
+    else:
+        # Impossible --- panic?
+        pass
+    return dnorm
 
 
 cdef double dotv(

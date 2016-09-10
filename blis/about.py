@@ -5,10 +5,10 @@
 
 __name__ = 'blis'
 __title__ = 'blis'
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 __summary__ = 'Cython bindings for Blis linear algebra'
 __uri__ = 'https://github.com/spacy-io/cython-blis'
 __author__ = 'Matthew Honnibal'
 __email__ = 'honnibal@gmail.com'
 __license__ = 'MIT'
-__release__ = True
+__release__ = False

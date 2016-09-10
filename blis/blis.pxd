@@ -115,3 +115,32 @@ cdef void scalv(
     real_ft  alpha,
     reals_ft  x, inc_t incx
 ) nogil
+
+
+cdef double norm_L1(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil
+
+
+cdef double norm_L2(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil
+
+
+cdef double norm_inf(
+    dim_t n,
+    reals_ft x, inc_t incx
+) nogil
+
+
+cdef double dotv(
+    conj_t  conjx,
+    conj_t  conjy,
+    dim_t   m,
+    reals_ft x,
+    reals_ft y,
+    inc_t incx,
+    inc_t incy,
+) nogil
