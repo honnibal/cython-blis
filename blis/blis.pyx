@@ -529,6 +529,18 @@ def gemm_(
          rsc, csc)
 
 
+def dotv_(
+    conj_t  conjx,
+    conj_t  conjy,
+    dim_t   m,
+    reals1d_ft x,
+    reals1d_ft y,
+    inc_t incx,
+    inc_t incy,
+):
+    return dotv(conjx, conjy, m, x, y, incx, incy)
+
+
 @atexit.register
 def finalize():
     bli_finalize()
