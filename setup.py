@@ -5,7 +5,6 @@ from os import path
 import subprocess
 import sys
 import contextlib
-import StringIO
 from distutils.command.build_ext import build_ext
 from distutils.sysconfig import get_python_inc
 
