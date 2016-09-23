@@ -1,0 +1,20 @@
+language: python
+
+sudo: required
+dist: precise
+group: edge
+
+python:
+   - "2.7"
+   - "3.4"
+
+os:
+  - linux
+
+install:
+  - "pip install -r requirements.txt"
+  - "pip install -e ."
+
+script:
+  - "pip install pytest"
+  - "python -m pytest blis"
