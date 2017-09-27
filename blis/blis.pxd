@@ -2,8 +2,10 @@ from cython cimport view
 from libc.stdint cimport int64_t
 
 
-ctypedef float[:] float1d_t
-ctypedef double[:] double1d_t
+ctypedef float[::1] float1d_t
+ctypedef double[::1] double1d_t
+ctypedef float[:, ::1] float2d_t
+ctypedef double[:, ::1] double2d_t
 ctypedef float* floats_t
 ctypedef double* doubles_t
 
@@ -18,6 +20,11 @@ cdef fused reals_ft:
 cdef fused reals1d_ft:
     float1d_t
     double1d_t
+
+
+cdef fused reals2d_ft:
+    float2d_t
+    double2d_t
 
 
 cdef fused real_ft:
@@ -67,10 +74,10 @@ cdef void gemm(
     dim_t   m,
     dim_t   n,
     dim_t   k,
-    real_ft  alpha,
+    double  alpha,
     reals_ft  a, inc_t rsa, inc_t csa,
     reals_ft  b, inc_t rsb, inc_t csb,
-    real_ft  beta,
+    double  beta,
     reals_ft  c, inc_t rsc, inc_t csc,
 ) nogil
 
