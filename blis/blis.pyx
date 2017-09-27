@@ -5,7 +5,7 @@ import atexit
 
 
 cdef extern from "_ext/include/blis/blis.h" nogil:
-    enum blis_err_t "err_t": 
+    enum blis_err_t "err_t":
         pass
 
 
@@ -37,10 +37,10 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
         BLIS_UNIT_DIAG
 
     char* bli_info_get_int_type_size_str()
-    
+
     blis_err_t bli_init()
     blis_err_t bli_finalize()
-    
+
 
     # BLAS level 3 routines
     void bli_dgemm(
@@ -129,7 +129,7 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
        double*  y, inc_t incy,
        blis_cntx_t* cntx
      )
-    
+
     void bli_saxpyv(
        blis_conj_t  conjx,
        dim_t   m,
@@ -164,7 +164,7 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
        double*  rho,
        blis_cntx_t* cntx
     )
-    
+
     void bli_sdotv(
        blis_conj_t  conjx,
        blis_conj_t  conjy,
@@ -202,7 +202,7 @@ cdef extern from "_ext/include/blis/blis.h" nogil:
        double*  norm,
        blis_cntx_t* cntx
     )
-    
+
     void bli_snormiv(
        dim_t   n,
        float*  x, inc_t incx,
@@ -240,6 +240,21 @@ def get_int_type_size():
     cdef char* int_size = bli_info_get_int_type_size_str()
     return '%d' % int_size[0]
 
+def benchmark_gemm(float[:, ::1] A, float[:, ::1] B, float[:, ::1] C,
+                   int ntimes):
+    cdef float* a = &A[0,0]
+    cdef float* b = &B[0,0]
+    cdef float* c = &C[0,0]
+    cdef double scale = 1.0
+    for i in range(ntimes):
+        gemm[floats_t](NO_TRANSPOSE, NO_TRANSPOSE,
+            A.shape[0], B.shape[1], A.shape[1],
+        scale,
+        a, A.shape[1], 1,
+        b, B.shape[1], 1,
+        scale,
+        c, B.shape[1], 1)
+
 
 # BLAS level 3 routines
 cdef void gemm(
@@ -248,10 +263,10 @@ cdef void gemm(
     dim_t   m,
     dim_t   n,
     dim_t   k,
-    real_ft  alpha,
+    double  alpha,
     reals_ft  a, inc_t rsa, inc_t csa,
     reals_ft  b, inc_t rsb, inc_t csb,
-    real_ft  beta,
+    double  beta,
     reals_ft  c, inc_t rsc, inc_t csc
 ) nogil:
     cdef float alpha_f = alpha
@@ -520,13 +535,18 @@ def gemm_(
     dim_t   n,
     dim_t   k,
     double  alpha,
-    reals1d_ft  a, inc_t rsa, inc_t csa,
-    reals1d_ft  b, inc_t rsb, inc_t csb,
+    reals2d_ft a, inc_t rsa, inc_t csa,
+    reals2d_ft b, inc_t rsb, inc_t csb,
     double  beta,
-    reals1d_ft  c, inc_t rsc, inc_t csc
+    reals2d_ft c, inc_t rsc, inc_t csc
 ):
-    gemm(trans_a, trans_b, m, n, k, alpha, a, rsa, csa, b, rsb, csb, beta, c,
-         rsc, csc)
+    gemm(trans_a, trans_b,
+         m, n, k,
+         alpha,
+         &a[0,0], rsa, csa,
+         &b[0,0], rsb, csb,
+         beta,
+         &c[0,0], rsc, csc)
 
 
 def dotv_(
