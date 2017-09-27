@@ -9,3 +9,12 @@ cache/
 __pycache__/
 .python-version
 cythonize.dat
+
+# Blis stuff
+blis/_ext
+bli_config.h
+Makefile
+obj/
+lib/
+common.mk
+config.mk
