@@ -24,7 +24,7 @@ def _reshape_for_gemm(A, B, a_rows, a_cols, out_cols, dtype, trans_a=False, tran
     B = np.ascontiguousarray(B.flatten()[:a_cols*b_cols], dtype=dtype)
     B = B.reshape((a_cols, b_cols))
     out_cols = B.shape[1]
-    C = np.zeros(shape=(A.shape[0] * B.shape[1],), dtype=dtype)
+    C = np.zeros(shape=(A.shape[0], B.shape[1],), dtype=dtype)
     if trans_a:
         A = np.ascontiguousarray(A.T, dtype=dtype)
     return A, B, C
@@ -46,8 +46,8 @@ def test_memoryview_double_notrans(A, B, a_rows, a_cols, out_cols):
     gemm(0, 0,
         A.shape[0], B.shape[1], A.shape[1],
         1.0,
-        np.ascontiguousarray(A.flatten(), dtype='float64'), A.shape[1], 1,
-        np.ascontiguousarray(B.flatten(), dtype='float64'), B.shape[1], 1,
+        np.ascontiguousarray(A, dtype='float64'), A.shape[1], 1,
+        np.ascontiguousarray(B, dtype='float64'), B.shape[1], 1,
         1.0,
         C, B.shape[1], 1)
     my_result = C.reshape((A.shape[0], B.shape[1]))
@@ -72,8 +72,8 @@ def test_memoryview_float_notrans(A, B, a_rows, a_cols, out_cols):
     gemm(0, 0,
         A.shape[0], B.shape[1], A.shape[1],
         1.0,
-        np.ascontiguousarray(A.flatten(), dtype='float32'), A.shape[1], 1,
-        np.ascontiguousarray(B.flatten(), dtype='float32'), B.shape[1], 1,
+        np.ascontiguousarray(A, dtype='float32'), A.shape[1], 1,
+        np.ascontiguousarray(B, dtype='float32'), B.shape[1], 1,
         1.0,
         C, B.shape[1], 1)
     my_result = C.reshape((A.shape[0], B.shape[1]))
