@@ -64,8 +64,12 @@ def make_blis(blis_dir, out_dir):
     if os.path.exists(os.path.join(out_dir, 'lib', 'libblis.a')):
         os.unlink(os.path.join(out_dir, 'lib', 'libblis.a'))
     march = get_processor_info()
-    if march in [b'broadwell', b'kaby lake', b'skylake']:
+    if march in [b'haswell', b'broadwell', b'kaby lake', b'skylake']:
         march = 'haswell'
+    elif march == [b'ivy bridge', b'sandy bridge', b'sandybridge']:
+        march = 'sandybridge'
+    elif march not in (b'piledriver', b'bulldozer', b'carrizo'):
+        march = 'reference'
     shared_lib_loc = os.path.join(out_dir, 'lib', ('libblis-0.2.2-53-%s.a' % march))
     if os.path.exists(shared_lib_loc):
         print("Linking to pre-built static library: %s" % shared_lib_loc)
@@ -77,10 +81,7 @@ def make_blis(blis_dir, out_dir):
     configure_cmd.extend(['-i', '64'])
     configure_cmd.extend(['-p', out_dir])
     configure_cmd.extend(['--disable-cblas'])
-    if os.environ.get("BLIS_OMP", '1') == '1':
-        configure_cmd.extend(['-t', 'openmp'])
-    elif os.environ.get("BLIS_PTHREADS") == '1':
-        configure_cmd.extend(['-t', 'pthreads'])
+    configure_cmd.extend(['-t', 'openmp'])
     configure_cmd.append(march)
     print(configure_cmd)
     output = open(os.devnull, 'wb')
