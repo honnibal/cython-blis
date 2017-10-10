@@ -61,8 +61,19 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 def make_blis(blis_dir, out_dir):
+    if os.path.exists(os.path.join(out_dir, 'lib', 'libblis.a')):
+        os.unlink(os.path.join(out_dir, 'lib', 'libblis.a'))
+    march = get_processor_info()
+    if march in [b'broadwell', b'kaby lake', b'skylake']:
+        march = 'haswell'
+    shared_lib_loc = os.path.join(out_dir, 'lib', ('libblis-0.2.2-53-%s.a' % march))
+    if os.path.exists(shared_lib_loc):
+        print("Linking to pre-built static library: %s" % shared_lib_loc)
+        os.symlink(str(shared_lib_loc), os.path.join(out_dir, 'lib', 'libblis.a'))
+        return
+
     print("Compiling Blis (takes 60 to 120 seconds)")
-    configure_cmd = [path.join(blis_dir, 'configure')]
+    configure_cmd = ['./configure']
     configure_cmd.extend(['-i', '64'])
     configure_cmd.extend(['-p', out_dir])
     configure_cmd.extend(['--disable-cblas'])
@@ -70,19 +81,17 @@ def make_blis(blis_dir, out_dir):
         configure_cmd.extend(['-t', 'openmp'])
     elif os.environ.get("BLIS_PTHREADS") == '1':
         configure_cmd.extend(['-t', 'pthreads'])
-    march = get_processor_info()
-    if march in [b'broadwell', b'kaby lake', b'skylake']:
-        march = 'haswell'
     configure_cmd.append(march)
     print(configure_cmd)
     output = open(os.devnull, 'wb')
-    if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
+    if subprocess.call(configure_cmd, cwd=blis_dir, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'configure' for BLIS")
-    make_cmd = ['make', '-j3', '-f', path.join(blis_dir, 'Makefile')]
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+    make_cmd = ['make', '-j3']
+    print(make_cmd)
+    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
         raise EnvironmentError("Error calling 'make' for BLIS")
     make_cmd.append('install')
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
         raise EnvironmentError("Error calling 'make install' for BLIS")
 
 
@@ -160,18 +169,23 @@ def setup_package():
             ext_modules.append(
                 Extension(mod_name, [mod_path],
                     include_dirs=include_dirs,
-                    extra_link_args=[path.join(BLIS_LIB_DIR, 'lib', 'libblis.a')],
+                    extra_compile_args=['-fopenmp'],
+                    extra_link_args=[
+                        '-fopenmp',
+                        path.join(BLIS_LIB_DIR, 'lib', 'libblis.a')
+                    ],
                 ))
 
         if not is_source_release(root):
             generate_cython(root, 'blis')
 
         src_files = package_files(path.join('blis', '_src'))
+        ext_files = package_files(path.join('blis', '_ext'))
         setup(
             name=about['__title__'],
             zip_safe=True,
             packages=PACKAGES,
-            package_data={'': ['*.c', '*.pyx', '*.pxd', '_ext/include/*.h'] + src_files},
+            package_data={'': ['*.c', '*.pyx', '*.pxd'] +ext_files + src_files},
             description=about['__summary__'],
             long_description=readme,
             author=about['__author__'],
