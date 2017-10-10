@@ -7,6 +7,7 @@ import sys
 import contextlib
 from distutils.command.build_ext import build_ext
 from distutils.sysconfig import get_python_inc
+import platform
 
 try:
     from setuptools import Extension, setup
@@ -45,6 +46,8 @@ class build_ext_options:
             e.extra_link_args.extend(link_options.get(
                 self.compiler.compiler_type, link_options['other']))
 
+            import platform, subprocess
+
 
 class build_ext_subclass(build_ext, build_ext_options):
     def build_extensions(self):
@@ -62,13 +65,16 @@ def make_blis(blis_dir, out_dir):
     configure_cmd = [path.join(blis_dir, 'configure')]
     configure_cmd.extend(['-i', '64'])
     configure_cmd.extend(['-p', out_dir])
-    configure_cmd.extend(['--disable-blas'])
     configure_cmd.extend(['--disable-cblas'])
-    if os.environ.get("BLIS_OMP") == '1':
-        configure_cmd.extend(['-t', 'omp'])
+    if os.environ.get("BLIS_OMP", '1') == '1':
+        configure_cmd.extend(['-t', 'openmp'])
     elif os.environ.get("BLIS_PTHREADS") == '1':
         configure_cmd.extend(['-t', 'pthreads'])
-    configure_cmd.append('auto')
+    march = get_processor_info()
+    if march in [b'broadwell', b'kaby lake', b'skylake']:
+        march = 'haswell'
+    configure_cmd.append(march)
+    print(configure_cmd)
     output = open(os.devnull, 'wb')
     if subprocess.call(configure_cmd, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'configure' for BLIS")
@@ -78,6 +84,14 @@ def make_blis(blis_dir, out_dir):
     make_cmd.append('install')
     if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'make install' for BLIS")
+
+
+def get_processor_info():
+    command = 'gcc -march=native -Q --help=target | grep march'
+    info = subprocess.check_output(command, shell=True)
+    march = info.strip().split()[-1]
+    return march
+
 
 
 def generate_cython(root, source):
