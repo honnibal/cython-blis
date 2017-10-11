@@ -78,7 +78,8 @@ def make_blis(blis_dir, out_dir):
         os.symlink(str(shared_lib_loc), os.path.join(out_dir, 'lib', 'libblis.a'))
         return
 
-    print("Compiling Blis (takes 60 to 120 seconds)")
+    print("Compiling Blis (takes 60 to 120 seconds)")j
+    subprocess.check_call(['git', 'init', blis_dir])
     configure_cmd = [os.path.join(blis_dir, 'configure')]
     configure_cmd.extend(['-i', '64'])
     configure_cmd.extend(['-p', out_dir])
