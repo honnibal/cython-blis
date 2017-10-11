@@ -91,7 +91,7 @@ def make_blis(blis_dir, out_dir):
     print(make_cmd)
     if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
         output.close()
-        print(open(output).read())
+        print(open(output, 'wb').read())
         raise EnvironmentError("Error calling 'make' for BLIS")
     make_cmd.append('install')
     if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
