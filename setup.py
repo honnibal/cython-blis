@@ -34,13 +34,16 @@ def get_c_sources(start_dir):
 def build_extensions(src_dir, include_dir, compiler, arch):
     if os.path.exists(include_dir):
         shutil.rmtree(include_dir)
+    print("Buiding with", compiler, arch)
     c_sources = get_c_sources(os.path.join(src_dir, arch))
-    cflags, ldflags = get_flags(compiler=compiler, arch='reference')
+    cflags, ldflags = get_flags(compiler=compiler, arch=arch)
+    print(cflags, ldflags)
     shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
     return [
         Extension("blis.blis", ["blis/blis.pyx"] + c_sources,
                   include_dirs=[numpy.get_include(), include_dir],
-                  extra_compile_args=cflags, extra_link_args=ldflags)
+                  extra_compile_args=cflags, extra_link_args=ldflags,
+                  undef_macros=["FORTIFY_SOURCE"])
     ]
 
 
