@@ -87,19 +87,15 @@ def make_blis(blis_dir, out_dir):
     configure_cmd.append(march)
     print(configure_cmd)
     output = open('build.log', 'wb')
-    if subprocess.call(configure_cmd, cwd=blis_dir, stdout=output, stderr=output) != 0:
-        print(open('build.log', 'rb').read())
-        raise EnvironmentError("Error calling 'configure' for BLIS")
+    output = subprocess.check_output(configure_cmd, cwd=blis_dir)
+    #print(open('build.log', 'rb').read())
+    #raise EnvironmentError("Error calling 'configure' for BLIS")
     make_cmd = ['make']
-    print(make_cmd)
-    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=PWD) != 0:
-        output.close()
-        print(open('build.log', 'rb').read())
-        raise EnvironmentError("Error calling 'make' for BLIS")
+    print(make_cmd, PWD)
+    print(os.environ)
+    output = subprocess.check_output(make_cmd, cwd=PWD)
     make_cmd.append('install')
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
-        print(open('build.log', 'rb').read())
-        raise EnvironmentError("Error calling 'make install' for BLIS")
+    output = subprocess.check_output(make_cmd, cwd=PWD)
 
 
 def get_processor_info():
