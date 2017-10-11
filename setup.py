@@ -48,7 +48,7 @@ def build_extensions(src_dir, include_dir, compiler, arch):
 PWD = os.path.join(os.path.dirname(__file__))
 SRC = os.path.join(PWD, 'ext_src_files')
 INCLUDE = os.path.join(PWD, 'blis/include')
-ARCH = 'haswell'
+ARCH = os.environ.get('BLIS_ARCH', 'reference')
 COMPILER = 'gcc'
 
 
