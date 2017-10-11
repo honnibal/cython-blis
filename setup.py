@@ -71,14 +71,14 @@ def make_blis(blis_dir, out_dir):
     elif march == [b'ivy bridge', b'sandy bridge', b'sandybridge']:
         march = 'sandybridge'
     elif march not in (b'piledriver', b'bulldozer', b'carrizo'):
-        march = 'auto'
+        march = 'reference'
     shared_lib_loc = os.path.join(out_dir, 'lib', ('libblis-0.2.2-53-%s.a' % march))
     if os.path.exists(shared_lib_loc):
         print("Linking to pre-built static library: %s" % shared_lib_loc)
         os.symlink(str(shared_lib_loc), os.path.join(out_dir, 'lib', 'libblis.a'))
         return
 
-    print("Compiling Blis (takes 60 to 120 seconds)")j
+    print("Compiling Blis (takes 60 to 120 seconds)")
     subprocess.check_call(['git', 'init', blis_dir])
     configure_cmd = [os.path.join(blis_dir, 'configure')]
     configure_cmd.extend(['-i', '64'])
@@ -105,7 +105,7 @@ def get_processor_info():
         info = subprocess.check_output(command, shell=True)
         march = info.strip().split()[-1]
     except subprocess.CalledProcessError:
-        march = 'auto'
+        march = 'reference'
     return march
 
 
