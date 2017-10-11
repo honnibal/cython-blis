@@ -1,5 +1,3 @@
-# Use bash explicitly (otherwise Ubuntu uses dash)
-SHELL = `which bash`
 #
 #
 #  BLIS    
