@@ -14,7 +14,7 @@ install:
   - pip install coveralls
 
 script:
-  - python -m pytest blis --cov=thinc
+  - python -m pytest blis --cov=blis
 
 after_success:
   coveralls
