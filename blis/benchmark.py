@@ -1,7 +1,7 @@
 import numpy
 import numpy.random
-from blis.blis import gemm_
-from blis.blis import init
+from .blis import gemm_
+from .blis import init
 from timeit import default_timer as timer
 numpy.random.seed(0)
 init()
@@ -52,19 +52,18 @@ def main(nI=128*3, nO=128*3, batch_size=2000):
     X1, W1 = create_data(nI, nO, batch_size)
     X2 = X1.copy()
     W2 = W1.copy()
+    print("Blis...")
+    start = timer()
+    run_blis(X2, W2)
+    end = timer()
+    blis_time = end-start
+    print("%.2f seconds" % blis_time) 
     print("Numpy...")
     start = timer()
     run_numpy(X1, W1)
     end = timer()
     numpy_time = end-start
     print("%.2f seconds" % numpy_time) 
-    print("Blis...")
-    start = timer()
-    run_blis(X2, W2)
-    end = timer()
-    blis_time = end-start
-    print("%.2f seconds" % numpy_time) 
-
 
 if __name__:
     main()
