@@ -1,3 +1,5 @@
+# Use bash explicitly (otherwise Ubuntu uses dash)
+SHELL = `which bash`
 #
 #
 #  BLIS    
@@ -32,8 +34,6 @@
 #
 #
 
-# Use bash explicitly (otherwise Ubuntu uses dash)
-SHELL = /bin/bash
 
 #
 # Makefile
