@@ -71,7 +71,7 @@ def make_blis(blis_dir, out_dir):
     elif march == [b'ivy bridge', b'sandy bridge', b'sandybridge']:
         march = 'sandybridge'
     elif march not in (b'piledriver', b'bulldozer', b'carrizo'):
-        march = 'reference'
+        march = 'auto'
     shared_lib_loc = os.path.join(out_dir, 'lib', ('libblis-0.2.2-53-%s.a' % march))
     if os.path.exists(shared_lib_loc):
         print("Linking to pre-built static library: %s" % shared_lib_loc)
@@ -104,8 +104,11 @@ def make_blis(blis_dir, out_dir):
 
 def get_processor_info():
     command = 'gcc -march=native -Q --help=target | grep march'
-    info = subprocess.check_output(command, shell=True)
-    march = info.strip().split()[-1]
+    try:
+        info = subprocess.check_output(command, shell=True)
+        march = info.strip().split()[-1]
+    except subprocess.CalledProcessError:
+        march = 'auto'
     return march
 
 
