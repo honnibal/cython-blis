@@ -75,7 +75,7 @@ def make_blis(blis_dir, out_dir):
     shared_lib_loc = os.path.join(out_dir, 'lib', ('libblis-0.2.2-53-%s.a' % march))
     if os.path.exists(shared_lib_loc):
         print("Linking to pre-built static library: %s" % shared_lib_loc)
-        os.symlink(str(shared_lib_loc), os.path.join(out_dir, 'lib', 'libblis.a'))
+        os.symlink(os.path.join(out_dir, 'lib', 'libblis.a'), shared_lib_loc)
         return
 
     print("Compiling Blis (takes 60 to 120 seconds)")
