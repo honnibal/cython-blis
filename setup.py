@@ -12,9 +12,9 @@ from setuptools.extension import Extension
 def get_flags(arch='haswell', compiler='gcc'):
     flags = json.load(open('compilation_flags.json'))
     cflags = flags['cflags']['common']
-    cflags += flags['cflags'][compiler][arch]
+    cflags += flags['cflags'].get(compiler, {}).get(arch, [])
     ldflags = flags['ldflags']['common']
-    cflags += flags['ldflags'][compiler][arch]
+    ldflags += flags['ldflags'].get(compiler, {}).get(arch, [])
     return cflags, ldflags
 
 
@@ -36,7 +36,7 @@ def build_extensions(src_dir, include_dir, compiler, arch):
     if os.path.exists(include_dir):
         shutil.rmtree(include_dir)
     c_sources = get_c_sources(os.path.join(src_dir, arch))
-    shutil.copytree(os.path.join(src_dir, arch, 'include'), include_dir) 
+    shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
     cflags, ldflags = get_flags(compiler=compiler, arch=arch)
     return [
         Extension("blis.blis", ["blis/blis.pyx"] + c_sources,
@@ -45,8 +45,9 @@ def build_extensions(src_dir, include_dir, compiler, arch):
     ]
 
 
-SRC = os.path.join(os.path.dirname(__file__), 'ext_src_files')
-INCLUDE = os.path.join(os.path.dirname(__file__), 'blis/include')
+PWD = os.path.join(os.path.dirname(__file__))
+SRC = os.path.join(PWD, 'ext_src_files')
+INCLUDE = os.path.join(PWD, 'blis/include')
 ARCH = 'haswell'
 COMPILER = 'gcc'
 
