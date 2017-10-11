@@ -59,8 +59,7 @@
       "mic": [],
       "piledriver": [],
       "pnacl": [],
-      "power7": [],
-      "-fopenmp"
+      "power7": []
     },
     "clang": {
       "reference": ["-O2"],
