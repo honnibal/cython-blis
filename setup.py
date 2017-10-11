@@ -61,6 +61,8 @@ class build_ext_subclass(build_ext, build_ext_options):
 
 
 def make_blis(blis_dir, out_dir):
+    blis_dir = os.path.abspath(blis_dir)
+    out_dir = os.path.abspath(out_dir)
     if os.path.exists(os.path.join(out_dir, 'lib', 'libblis.a')):
         os.unlink(os.path.join(out_dir, 'lib', 'libblis.a'))
     march = get_processor_info()
