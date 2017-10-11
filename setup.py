@@ -13,7 +13,7 @@ def get_flags(arch='haswell', compiler='gcc'):
     cflags = flags['cflags']['common']
     cflags += flags['cflags'].get(compiler, {}).get(arch, [])
     ldflags = flags['ldflags']['common']
-    ldflags += flags['ldflags'].get(compiler, {}).get(arch, [])
+    ldflags += flags['ldflags'].get(compiler, [])
     return cflags, ldflags
 
 
@@ -29,7 +29,6 @@ def get_c_sources(start_dir):
                 if name.endswith('.c'):
                     c_sources.append(os.path.join(path, name))
     return c_sources
-
 
 
 def build_extensions(src_dir, include_dir, compiler, arch):
