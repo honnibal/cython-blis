@@ -61,7 +61,6 @@
       "piledriver": [],
       "pnacl": [],
       "power7": []
-
     }
   },
   "cflags": {
@@ -73,7 +72,8 @@
       "-fPIC",
       "-Wall",
       "-O3",
-      "-fopenmp"
+      "-fopenmp",
+      "-fno-stack-protector"
     ],
     "gcc": {
       "reference": ["-O2"],
