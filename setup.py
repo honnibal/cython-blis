@@ -92,12 +92,14 @@ def make_blis(blis_dir, out_dir):
         raise EnvironmentError("Error calling 'configure' for BLIS")
     make_cmd = ['make', '-f', os.path.join(blis_dir, 'Makefile'), '-j3']
     print(make_cmd)
-    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
+    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir,
+                       shell=True) != 0:
         output.close()
         print(open('build.log', 'rb').read())
         raise EnvironmentError("Error calling 'make' for BLIS")
     make_cmd.append('install')
-    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
+    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir,
+                       shell=True) != 0:
         print(open('build.log', 'rb').read())
         raise EnvironmentError("Error calling 'make install' for BLIS")
 
