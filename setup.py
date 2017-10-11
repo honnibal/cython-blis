@@ -84,12 +84,14 @@ def make_blis(blis_dir, out_dir):
     configure_cmd.extend(['-t', 'openmp'])
     configure_cmd.append(march)
     print(configure_cmd)
-    output = open(os.devnull, 'wb')
+    output = open('build.log', 'wb')
     if subprocess.call(configure_cmd, cwd=blis_dir, stdout=output, stderr=output) != 0:
         raise EnvironmentError("Error calling 'configure' for BLIS")
     make_cmd = ['make', '-j3']
     print(make_cmd)
     if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
+        output.close()
+        print(open(output).read())
         raise EnvironmentError("Error calling 'make' for BLIS")
     make_cmd.append('install')
     if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=blis_dir) != 0:
