@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-from distutils.command.build_ext import build_ext
-from distutils.sysconfig import get_python_inc
-from setuptools import setup
+from setuptools import Extension, setup
 import shutil
 import os
 import os.path
