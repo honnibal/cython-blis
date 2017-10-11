@@ -92,7 +92,7 @@ def make_blis(blis_dir, out_dir):
         raise EnvironmentError("Error calling 'configure' for BLIS")
     make_cmd = ['make', '-f', os.path.join(blis_dir, 'Makefile'), '-j3']
     print(make_cmd)
-    if subprocess.call(make_cmd, stdout=output, stderr=output) != 0:
+    if subprocess.call(make_cmd, stdout=output, stderr=output, cwd=PWD) != 0:
         output.close()
         print(open('build.log', 'rb').read())
         raise EnvironmentError("Error calling 'make' for BLIS")
