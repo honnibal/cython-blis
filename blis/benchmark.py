@@ -25,7 +25,10 @@ def run_numpy(X, W):
 
 
 def run_blis(X, W):
+    nO, nI = W.shape
+    batch_size = X.shape[0]
     total = 0.
+    y = numpy.zeros((batch_size, nO), dtype='f')
     for i in range(1000):
         # Output dim: batch_size * nr_row
         # vec dim:    batch_size * nr_col
@@ -48,7 +51,7 @@ def main(nI=128*3, nO=128*3, batch_size=2000):
           "nO={nO} nI={nI} batch_size={batch_size}".format(**locals()))
     X1, W1 = create_data(nI, nO, batch_size)
     X2 = X1.copy()
-    W2 = W2.copy()
+    W2 = W1.copy()
     print("Numpy...")
     start = timer()
     run_numpy(X1, W1)
