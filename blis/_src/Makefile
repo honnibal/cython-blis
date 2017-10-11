@@ -32,6 +32,9 @@
 #
 #
 
+# Use bash explicitly (otherwise Ubuntu uses dash)
+SHELL = /bin/bash
+
 #
 # Makefile
 #
