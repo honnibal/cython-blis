@@ -12,7 +12,6 @@ cythonize.dat
 
 # Blis stuff
 blis/_ext
-bli_config.h
 Makefile
 obj/
 lib/
