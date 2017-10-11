@@ -1,4 +1,1 @@
-cython
-hypothesis
 numpy
-pytest
