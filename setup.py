@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from distutils.command.build_ext import build_ext
+from distutils.sysconfig import get_python_inc
 from setuptools import setup
 import shutil
 import os
@@ -6,7 +8,6 @@ import os.path
 import json
 
 import numpy
-from setuptools.extension import Extension
 
 
 def get_flags(arch='haswell', compiler='gcc'):
@@ -32,12 +33,13 @@ def get_c_sources(start_dir):
     return c_sources
 
 
+
 def build_extensions(src_dir, include_dir, compiler, arch):
     if os.path.exists(include_dir):
         shutil.rmtree(include_dir)
     c_sources = get_c_sources(os.path.join(src_dir, arch))
+    cflags, ldflags = get_flags(compiler=compiler, arch='reference')
     shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
-    cflags, ldflags = get_flags(compiler=compiler, arch=arch)
     return [
         Extension("blis.blis", ["blis/blis.pyx"] + c_sources,
                   include_dirs=[numpy.get_include(), include_dir],
@@ -49,8 +51,7 @@ PWD = os.path.join(os.path.dirname(__file__))
 SRC = os.path.join(PWD, 'ext_src_files')
 INCLUDE = os.path.join(PWD, 'blis/include')
 ARCH = os.environ.get('BLIS_ARCH', 'reference')
-COMPILER = 'gcc'
-
+COMPILER = os.environ.get('BLIS_COMPILER', 'gcc')
 
 setup(
     setup_requires=['pbr', 'numpy'],
