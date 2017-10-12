@@ -54,12 +54,16 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
     
     def get_flags(self, arch='haswell', compiler='gcc'):
         flags = json.load(open('compilation_flags.json'))
-        cflags = flags['cflags'].get(compiler, {}).get(arch, [])
         if compiler != 'msvc':
+            cflags = flags['cflags'].get(compiler, {}).get(arch, [])
             cflags += flags['cflags']['common']
-        ldflags = flags['ldflags'].get(compiler, [])
+        else:
+            compiler = flags['cflags']['msvc']
         if compiler != 'msvc':
+            ldflags = flags['ldflags'].get(compiler, [])
             ldflags += flags['ldflags']['common']
+        else:
+            ldflags = flags['ldflags']['msvc']
         return cflags, ldflags
 
     def get_extensions(self, src_dir, include_dir):
