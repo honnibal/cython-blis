@@ -111,5 +111,27 @@ COMPILER = os.environ.get('BLIS_COMPILER', 'gcc')
 setup(
     setup_requires=['numpy'],
     ext_modules=[Extension('blis.blis', ['blis/blis.pyx'])],
-    cmdclass={'build_ext': ExtensionBuilder}
+    cmdclass={'build_ext': ExtensionBuilder},
+
+    name="blis",
+    version="0.0.12",
+    author="Matthew Honnibal",
+    author_email="matt@explosion.ai",
+    summary="The Blis BLAS-like linear algebra library, as a self-contained C-extension.",
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'License :: OSI Approved :: MIT',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: MacOS :: MacOS X',
+        'Programming Language :: Cython',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Scientific/Engineering'],
 )
