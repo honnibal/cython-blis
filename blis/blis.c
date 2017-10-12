@@ -722,7 +722,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "blis/blis.pyx",
+  "blis.pyx",
   "stringsource",
 };
 /* MemviewSliceStruct.proto */
@@ -2131,6 +2131,7 @@ static const char __pyx_k_trans_t[] = "trans_t";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_EnumBase[] = "EnumBase";
 static const char __pyx_k_EnumType[] = "EnumType";
+static const char __pyx_k_blis_pyx[] = "blis.pyx";
 static const char __pyx_k_defaults[] = "defaults";
 static const char __pyx_k_finalize[] = "finalize";
 static const char __pyx_k_getstate[] = "__getstate__";
@@ -2171,7 +2172,6 @@ static const char __pyx_k_Pyx_EnumBase[] = "__Pyx_EnumBase";
 static const char __pyx_k_f_contiguous[] = "f_contiguous";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
-static const char __pyx_k_blis_blis_pyx[] = "blis/blis.pyx";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_CONJ_TRANSPOSE[] = "CONJ_TRANSPOSE";
@@ -2280,7 +2280,7 @@ static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_benchmark_gemm;
 static PyObject *__pyx_n_s_beta;
 static PyObject *__pyx_n_s_blis_blis;
-static PyObject *__pyx_kp_s_blis_blis_pyx;
+static PyObject *__pyx_kp_s_blis_pyx;
 static PyObject *__pyx_n_s_byteorder;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
@@ -23860,7 +23860,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_benchmark_gemm, __pyx_k_benchmark_gemm, sizeof(__pyx_k_benchmark_gemm), 0, 0, 1, 1},
   {&__pyx_n_s_beta, __pyx_k_beta, sizeof(__pyx_k_beta), 0, 0, 1, 1},
   {&__pyx_n_s_blis_blis, __pyx_k_blis_blis, sizeof(__pyx_k_blis_blis), 0, 0, 1, 1},
-  {&__pyx_kp_s_blis_blis_pyx, __pyx_k_blis_blis_pyx, sizeof(__pyx_k_blis_blis_pyx), 0, 0, 1, 0},
+  {&__pyx_kp_s_blis_pyx, __pyx_k_blis_pyx, sizeof(__pyx_k_blis_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_byteorder, __pyx_k_byteorder, sizeof(__pyx_k_byteorder), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
@@ -24267,7 +24267,7 @@ static int __Pyx_InitCachedConstants(void) {
  *     bli_init()
  *     assert BLIS_NO_TRANSPOSE == <blis_trans_t>NO_TRANSPOSE
  */
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_init_2, 222, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 222, __pyx_L1_error)
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_init_2, 222, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 222, __pyx_L1_error)
 
   /* "blis/blis.pyx":239
  * 
@@ -24279,7 +24279,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__33 = PyTuple_Pack(1, __pyx_n_s_int_size); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 239, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__33);
   __Pyx_GIVEREF(__pyx_tuple__33);
-  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_get_int_type_size, 239, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 239, __pyx_L1_error)
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(0, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_get_int_type_size, 239, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 239, __pyx_L1_error)
 
   /* "blis/blis.pyx":243
  *     return '%d' % int_size[0]
@@ -24291,7 +24291,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__35 = PyTuple_Pack(9, __pyx_n_s_A, __pyx_n_s_B, __pyx_n_s_C, __pyx_n_s_ntimes, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_c, __pyx_n_s_scale, __pyx_n_s_i); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 243, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__35);
   __Pyx_GIVEREF(__pyx_tuple__35);
-  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(4, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_benchmark_gemm, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 243, __pyx_L1_error)
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(4, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_benchmark_gemm, 243, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 243, __pyx_L1_error)
 
   /* "blis/blis.pyx":531
  * 
@@ -24303,7 +24303,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__37 = PyTuple_Pack(16, __pyx_n_s_trans_a, __pyx_n_s_trans_b, __pyx_n_s_m, __pyx_n_s_n, __pyx_n_s_k, __pyx_n_s_alpha, __pyx_n_s_a, __pyx_n_s_rsa, __pyx_n_s_csa, __pyx_n_s_b, __pyx_n_s_rsb, __pyx_n_s_csb, __pyx_n_s_beta, __pyx_n_s_c, __pyx_n_s_rsc, __pyx_n_s_csc); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 531, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__37);
   __Pyx_GIVEREF(__pyx_tuple__37);
-  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(16, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_gemm, 531, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 531, __pyx_L1_error)
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(16, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_gemm, 531, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 531, __pyx_L1_error)
 
   /* "blis/blis.pyx":552
  * 
@@ -24315,7 +24315,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__39 = PyTuple_Pack(7, __pyx_n_s_conjx, __pyx_n_s_conjy, __pyx_n_s_m, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_incx, __pyx_n_s_incy); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 552, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__39);
   __Pyx_GIVEREF(__pyx_tuple__39);
-  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(7, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_dotv, 552, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 552, __pyx_L1_error)
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(7, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_dotv, 552, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 552, __pyx_L1_error)
 
   /* "blis/blis.pyx":565
  * 
@@ -24323,7 +24323,7 @@ static int __Pyx_InitCachedConstants(void) {
  * def finalize():             # <<<<<<<<<<<<<<
  *     bli_finalize()
  */
-  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_blis_pyx, __pyx_n_s_finalize, 565, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 565, __pyx_L1_error)
+  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_blis_pyx, __pyx_n_s_finalize, 565, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 565, __pyx_L1_error)
 
   /* "EnumBase":28
  * class __Pyx_EnumBase(int):
