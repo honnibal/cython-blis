@@ -1,50 +1,76 @@
 #!/usr/bin/env python
-from setuptools import Extension, setup
 import shutil
 import os
 import os.path
 import json
+import distutils.command.build_ext
+import subprocess
+import sys
+from setuptools import Extension, setup
 
 import numpy
 
-
-def get_flags(arch='haswell', compiler='gcc'):
-    flags = json.load(open('compilation_flags.json'))
-    cflags = flags['cflags']['common']
-    cflags += flags['cflags'].get(compiler, {}).get(arch, [])
-    ldflags = flags['ldflags']['common']
-    ldflags += flags['ldflags'].get(compiler, [])
-    return cflags, ldflags
+try:
+    import cython
+    use_cython = True
+except ImportError:
+    use_cython = False
 
 
-def get_c_sources(start_dir):
-    c_sources = []
-    excludes = ['old', 'attic', 'packv', 'scalv', 'cblas', 'other']
-    for path, subdirs, files in os.walk(start_dir):
-        for exc in excludes:
-            if exc in path:
-                break
-        else:
-            for name in files:
-                if name.endswith('.c'):
-                    c_sources.append(os.path.join(path, name))
-    return c_sources
+class ExtensionBuilder(distutils.command.build_ext.build_ext):
+    def build_extensions(self):
+        self.extensions = self.get_extensions(SRC, INCLUDE)
+        cflags, ldflags = self.get_flags(arch=self.get_compiler_name(),
+                                         compiler=self.get_arch_name())
+        print("CFLAGS", cflags)
+        print("LDFLAGS", ldflags)
+        for e in self.extensions:
+            e.extra_compile_args = list(cflags)
+            e.extra_link_args = list(ldflags)
+        distutils.command.build_ext.build_ext.build_extensions(self)
+    
+    def get_arch_name(self):
+        return 'reference'
 
+    def get_compiler_name(self):
+        return self.compiler.compiler_type
+    
+    def get_flags(self, arch='haswell', compiler='gcc'):
+        flags = json.load(open('compilation_flags.json'))
+        cflags = flags['cflags']['common']
+        cflags += flags['cflags'].get(compiler, {}).get(arch, [])
+        ldflags = flags['ldflags']['common']
+        ldflags += flags['ldflags'].get(compiler, [])
+        return cflags, ldflags
 
-def build_extensions(src_dir, include_dir, compiler, arch):
-    if os.path.exists(include_dir):
-        shutil.rmtree(include_dir)
-    print("Buiding with", compiler, arch)
-    c_sources = get_c_sources(os.path.join(src_dir, arch))
-    cflags, ldflags = get_flags(compiler=compiler, arch=arch)
-    print(cflags, ldflags)
-    shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
-    return [
-        Extension("blis.blis", ["blis/blis.pyx"] + c_sources,
-                  include_dirs=[numpy.get_include(), include_dir],
-                  extra_compile_args=cflags, extra_link_args=ldflags,
-                  undef_macros=["FORTIFY_SOURCE"])
-    ]
+    def get_extensions(self, src_dir, include_dir):
+        if os.path.exists(include_dir):
+            shutil.rmtree(include_dir)
+        if use_cython:
+            print("Calling Cython")
+            subprocess.check_call([sys.executable, 'bin/cythonize.py'], env=os.environ)
+        arch = self.get_arch_name()
+        c_sources = self.get_c_sources(os.path.join(src_dir, arch))
+        shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
+        print("Getting extensions (Shouldn't build yet?)")
+        return [
+            Extension("blis.blis", ["blis/blis.c"] + c_sources,
+                      include_dirs=[numpy.get_include(), include_dir],
+                      undef_macros=["FORTIFY_SOURCE"])
+        ]
+
+    def get_c_sources(self, start_dir):
+        c_sources = []
+        excludes = ['old', 'attic', 'packv', 'scalv', 'cblas', 'other']
+        for path, subdirs, files in os.walk(start_dir):
+            for exc in excludes:
+                if exc in path:
+                    break
+            else:
+                for name in files:
+                    if name.endswith('.c'):
+                        c_sources.append(os.path.join(path, name))
+        return c_sources
 
 
 PWD = os.path.join(os.path.dirname(__file__))
@@ -54,7 +80,7 @@ ARCH = os.environ.get('BLIS_ARCH', 'reference')
 COMPILER = os.environ.get('BLIS_COMPILER', 'gcc')
 
 setup(
-    setup_requires=['pbr', 'numpy'],
-    pbr=True,
-    ext_modules=build_extensions(SRC, INCLUDE, COMPILER, ARCH),
+    setup_requires=['numpy'],
+    ext_modules=[Extension('blis.blis', ['blis/blis.pyx'])],
+    cmdclass={'build_ext': ExtensionBuilder}
 )
