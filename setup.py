@@ -30,10 +30,22 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
         distutils.command.build_ext.build_ext.build_extensions(self)
     
     def get_arch_name(self):
-        return 'reference'
+        if 'BLIS_ARCH' in os.environ:
+            return os.environ['BLIS_ARCH']
+        processor = platform.processor()
+        if processor == 'x86_64':
+            return 'haswell' # Best guess?
+        else:
+            return 'reference'
 
     def get_compiler_name(self):
-        return self.compiler.compiler_type
+        if 'BLIS_COMPILER' in os.environ:
+            return os.environ['BLIS_COMPILER']
+        name = self.compiler.compiler_type
+        if name not in ('gcc', 'clang', 'icc'):
+            return 'gcc'
+        else:
+            return name
     
     def get_flags(self, arch='haswell', compiler='gcc'):
         flags = json.load(open('compilation_flags.json'))
