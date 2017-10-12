@@ -35,7 +35,7 @@
 #ifndef BLIS_CONFIG_H
 #define BLIS_CONFIG_H
 
-#if 1
+#if 0
 #define BLIS_ENABLE_PTHREADS
 #endif
 
