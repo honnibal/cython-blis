@@ -75,11 +75,10 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
         arch = self.get_arch_name()
         compiler = self.get_compiler_name()
         c_sources = self.get_c_sources(os.path.join(src_dir, arch))
-        shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
         if compiler == 'msvc':
-            shutil.copyfile(
-                os.path.join(PWD, 'blis', 'arch-includes', 'msvc9', 'stdint.h'),
-                os.path.join(include_dir, 'stdint.h'))
+            shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', compiler), include_dir) 
+        else:
+            shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
 
         print("Getting extensions (Shouldn't build yet?)")
         return [
