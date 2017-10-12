@@ -40,9 +40,9 @@
 #ifndef BLIS_ENABLE_MULTITHREADING
 
 // Define mtx_t.
-# pragma: warning( suppress )
 typedef struct mtx_s 
 {
+    const void* mutex;
 } mtx_t;
 // Define macros to operate on pthread-based mtx_t.
 #define bli_mutex_init( mtx_p ) \
