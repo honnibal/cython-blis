@@ -39,8 +39,8 @@ import hashlib
 import subprocess
 
 HASH_FILE = 'cythonize.dat'
-DEFAULT_ROOT = 'spacy'
-VENDOR = 'spaCy'
+DEFAULT_ROOT = 'blis'
+VENDOR = 'Explosion'
 
 # WindowsError is not defined on unix systems
 try:
