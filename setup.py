@@ -58,7 +58,7 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
             cflags = flags['cflags'].get(compiler, {}).get(arch, [])
             cflags += flags['cflags']['common']
         else:
-            compiler = flags['cflags']['msvc']
+            cflags = flags['cflags']['msvc']
         if compiler != 'msvc':
             ldflags = flags['ldflags'].get(compiler, [])
             ldflags += flags['ldflags']['common']
