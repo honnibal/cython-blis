@@ -43,17 +43,21 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
         if 'BLIS_COMPILER' in os.environ:
             return os.environ['BLIS_COMPILER']
         name = self.compiler.compiler_type
-        if name not in ('gcc', 'clang', 'icc'):
+        if name.startswith('msvc'):
+            return 'msvc'
+        elif name not in ('gcc', 'clang', 'icc'):
             return 'gcc'
         else:
             return name
     
     def get_flags(self, arch='haswell', compiler='gcc'):
         flags = json.load(open('compilation_flags.json'))
-        cflags = flags['cflags']['common']
-        cflags += flags['cflags'].get(compiler, {}).get(arch, [])
-        ldflags = flags['ldflags']['common']
-        ldflags += flags['ldflags'].get(compiler, [])
+        cflags = flags['cflags'].get(compiler, {}).get(arch, [])
+        if compiler != 'msvc':
+            cflags += flags['cflags']['common']
+        ldflags = flags['ldflags'].get(compiler, [])
+        if compiler != 'msvc':
+            ldflags += flags['ldflags']['common']
         return cflags, ldflags
 
     def get_extensions(self, src_dir, include_dir):
