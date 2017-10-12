@@ -76,7 +76,7 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
         compiler = self.get_compiler_name()
         c_sources = self.get_c_sources(os.path.join(src_dir, arch))
         if compiler == 'msvc':
-            shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', compiler), include_dir) 
+            shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', 'msvc-reference'), include_dir) 
         else:
             shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
 
