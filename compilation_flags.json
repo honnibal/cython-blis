@@ -1,7 +1,7 @@
 {
   "ldflags": {
     "common": ["-lm"],
-    "gcc": ["-fopenmp"],
+    "gcc": [],
     "icc": [],
     "clang": []
   },
@@ -17,19 +17,17 @@
       "-fno-stack-protector"
     ],
     "gcc": {
-      "reference": ["-O2", "-fopenmp"],
+      "reference": ["-O2"],
       "haswell": [
         "-mavx2",
         "-mfma",
         "-mfpmath=sse",
-        "-march=core-avx2",
-        "-fopenmp"
+        "-march=core-avx2"
       ],
       "sandybridge": [
         "-mavx",
         "-mfpmath=sse",
-        "-march=corei7-avx2",
-        "-fopenmp"
+        "-march=corei7-avx2"
       ],
       "carrizo": [
         "-02",
@@ -37,15 +35,13 @@
         "-mavx", 
         "-mfma",
         "-march=bdver4",
-        "-fmpath=sse",
-        "-fopenmp"
+        "-fmpath=sse"
       ],
       "knl": [
         "-mavx512f",
         "-mavx512pf",
         "-mfpmath=sse",
-        "-march=knl",
-        "-fopenmp"
+        "-march=knl"
       ],
       "armv7a": [],
       "armv8a": [],
