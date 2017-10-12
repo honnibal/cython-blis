@@ -20,11 +20,11 @@ except ImportError:
 
 class ExtensionBuilder(distutils.command.build_ext.build_ext):
     def build_extensions(self):
-        self.extensions = self.get_extensions(SRC, INCLUDE)
         compiler = self.get_compiler_name()
         arch = self.get_arch_name()
-        cflags, ldflags = self.get_flags(arch=arch, compiler=compiler)
+        self.extensions = self.get_extensions(SRC, INCLUDE)
         print(compiler, arch)
+        cflags, ldflags = self.get_flags(arch=arch, compiler=compiler)
         print("CFLAGS", cflags)
         print("LDFLAGS", ldflags)
         for e in self.extensions:
