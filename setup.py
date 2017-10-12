@@ -7,6 +7,7 @@ import distutils.command.build_ext
 import subprocess
 import sys
 from setuptools import Extension, setup
+import platform
 
 import numpy
 
