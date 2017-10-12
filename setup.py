@@ -67,8 +67,14 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
             print("Calling Cython")
             subprocess.check_call([sys.executable, 'bin/cythonize.py'], env=os.environ)
         arch = self.get_arch_name()
+        compiler = self.get_compiler_name()
         c_sources = self.get_c_sources(os.path.join(src_dir, arch))
         shutil.copytree(os.path.join(PWD, 'blis', 'arch-includes', arch), include_dir) 
+        if compiler == 'msvc':
+            shutil.copyfile(
+                os.path.join(PWD, 'blis', 'arch-includes', 'msvc9', 'stdint.h'),
+                include_dir)
+
         print("Getting extensions (Shouldn't build yet?)")
         return [
             Extension("blis.blis", ["blis/blis.c"] + c_sources,
