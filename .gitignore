@@ -11,9 +11,4 @@ __pycache__/
 cythonize.dat
 
 # Blis stuff
-blis/_ext
-Makefile
-obj/
-lib/
-common.mk
-config.mk
+blis/include
