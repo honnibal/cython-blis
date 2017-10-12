@@ -3,7 +3,8 @@
     "common": ["-lm"],
     "gcc": [],
     "icc": [],
-    "clang": []
+    "clang": [],
+    "msvc": []
   },
   "cflags": {
     "common": [
