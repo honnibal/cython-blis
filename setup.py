@@ -112,6 +112,7 @@ setup(
     setup_requires=['numpy'],
     ext_modules=[Extension('blis.blis', ['blis/blis.pyx'])],
     cmdclass={'build_ext': ExtensionBuilder},
+    package_data={'': ['*.pyx', '*.pxd', '*.h']}
 
     name="blis",
     version="0.0.12",
