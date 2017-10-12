@@ -9,8 +9,8 @@ python:
 install:
   - pip install -r dev-requirements.txt
   - pip install -r requirements.txt
-  - python setup.py build_ext --inplace
-  - pip install -e .
+  - BLIS_ARCH=reference python setup.py build_ext --inplace
+  - BLIS_ARCH=reference pip install -e .
   - pip install pytest-cov
   - pip install coveralls
 
