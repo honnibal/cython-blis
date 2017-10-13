@@ -4,7 +4,7 @@
 import atexit
 
 
-cdef extern from "include/blis.h" nogil:
+cdef extern from "blis.h" nogil:
     enum blis_err_t "err_t":
         pass
 
