@@ -37,7 +37,7 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
                 e.sources + c_sources,
                 extra_compile_args=cflags,
                 extra_link_args=ldflags,
-                include_dirs=[numpy.get_include(), include_dir],
+                include_dirs=[numpy.get_include(), os.path.abspath(include_dir)],
                 undef_macros=["FORTIFY_SOURCE"]))
         distutils.command.build_ext.build_ext.build_extensions(self)
     
