@@ -62,7 +62,7 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
             return name
     
     def get_flags(self, arch='haswell', compiler='gcc'):
-        flags = json.load(open('compilation_flags.json'))
+        flags = json.load(open('blis/compilation_flags.json'))
         if compiler != 'msvc':
             cflags = flags['cflags'].get(compiler, {}).get(arch, [])
             cflags += flags['cflags']['common']
@@ -103,7 +103,7 @@ setup(
     setup_requires=['numpy'],
     ext_modules=[Extension('blis.blis', ['blis/blis.c'])],
     cmdclass={'build_ext': ExtensionBuilder},
-    package_data={'': ['*.pyx', '*.pxd', '_src/*/include/*.h'] + c_files},
+    package_data={'': ['*.json', '*.pyx', '*.pxd', '_src/*/include/*.h'] + c_files},
 
     name="blis",
     packages=['blis'],
