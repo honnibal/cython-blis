@@ -305,7 +305,7 @@ cdef void ger(
     conj_t  conjy,
     dim_t   m,
     dim_t   n,
-    real_ft  alpha,
+    double  alpha,
     reals_ft  x, inc_t incx,
     reals_ft  y, inc_t incy,
     reals_ft  a, inc_t rsa, inc_t csa
