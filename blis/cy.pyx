@@ -528,39 +528,6 @@ cdef double dotv(
         pass
 
 
-def gemm_(
-    trans_t trans_a,
-    trans_t trans_b,
-    dim_t   m,
-    dim_t   n,
-    dim_t   k,
-    double  alpha,
-    reals2d_ft a, inc_t rsa, inc_t csa,
-    reals2d_ft b, inc_t rsb, inc_t csb,
-    double  beta,
-    reals2d_ft c, inc_t rsc, inc_t csc
-):
-    gemm(trans_a, trans_b,
-         m, n, k,
-         alpha,
-         &a[0,0], rsa, csa,
-         &b[0,0], rsb, csb,
-         beta,
-         &c[0,0], rsc, csc)
-
-
-def dotv_(
-    conj_t  conjx,
-    conj_t  conjy,
-    dim_t   m,
-    reals1d_ft x,
-    reals1d_ft y,
-    inc_t incx,
-    inc_t incy,
-):
-    return dotv(conjx, conjy, m, x, y, incx, incy)
-
-
 @atexit.register
 def finalize():
     bli_finalize()
