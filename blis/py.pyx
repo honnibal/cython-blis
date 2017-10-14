@@ -11,15 +11,17 @@ def axpy(reals1d_ft A, double scale=1., np.ndarray out=None):
         if out is None:
             out = numpy.zeros((A.shape[0],), dtype='f')
         B = <float*>out.data
+        return out
     elif reals1d_ft is double1d_t:
         if out is None:
             out = numpy.zeros((A.shape[0],), dtype='d')
         B = <double*>out.data
+        cy.axpyv(cy.NO_CONJUGATE, A.shape[0], scale, &A[0], 1, B, 1)
+        return out
     else:
         B = NULL
         raise TypeError("Unhandled fused type")
-    cy.axpyv(cy.NO_CONJUGATE, A.shape[0], scale, &A[0], 1, B, 1)
-    return out
+
 
 def batch_axpy(reals2d_ft A, reals1d_ft B, np.ndarray out=None):
     pass
@@ -36,7 +38,7 @@ def ger(reals2d_ft A, reals1d_ft B, double scale=1., np.ndarray out=None):
             &A[0,0], 1,
             &B[0], 1,
             <float*>out.data, out.shape[1], 1)
-
+        return out
     elif reals2d_ft is double2d_t and reals1d_ft is double1d_t:
         if out is None:
             out = numpy.zeros((A.shape[0], B.shape[0]), dtype='d')
@@ -47,10 +49,10 @@ def ger(reals2d_ft A, reals1d_ft B, double scale=1., np.ndarray out=None):
             &A[0,0], 1,
             &B[0], 1,
             <double*>out.data, out.shape[1], 1)
+        return out
     else:
         C = NULL
         raise TypeError("Unhandled fused type")
-    return out
 
 
 def gemm(reals2d_ft A, reals2d_ft B,
@@ -60,24 +62,33 @@ def gemm(reals2d_ft A, reals2d_ft B,
         if out is None:
             out = numpy.zeros((A.shape[0], B.shape[1]), dtype='f')
         C = <float*>out.data
+        cy.gemm(
+            cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
+            cy.TRANSPOSE if trans2 else cy.NO_TRANSPOSE,
+            A.shape[0], B.shape[1], A.shape[1],
+            alpha,
+            &A[0,0], A.shape[1], 1,
+            &B[0,0], B.shape[1], 1,
+            beta,
+            C, out.shape[1], 1)
+        return out
     elif reals2d_ft is double2d_t:
         if out is None:
             out = numpy.zeros((A.shape[0], B.shape[1]), dtype='d')
         C = <double*>out.data
+        cy.gemm(
+            cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
+            cy.TRANSPOSE if trans2 else cy.NO_TRANSPOSE,
+            A.shape[0], B.shape[1], A.shape[1],
+            alpha,
+            &A[0,0], A.shape[1], 1,
+            &B[0,0], B.shape[1], 1,
+            beta,
+            C, out.shape[1], 1)
+        return out
     else:
         C = NULL
         raise TypeError("Unhandled fused type")
-    cy.gemm(
-        cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
-        cy.TRANSPOSE if trans2 else cy.NO_TRANSPOSE,
-        A.shape[0], B.shape[1], A.shape[1],
-        alpha,
-        &A[0,0], A.shape[1], 1,
-        &B[0,0], B.shape[1], 1,
-        beta,
-        C, out.shape[1], 1)
-    return out
-
 
 def gemv(reals2d_ft A, reals1d_ft B,
         bint trans1=False, double alpha=1., double beta=1.,
@@ -85,27 +96,31 @@ def gemv(reals2d_ft A, reals1d_ft B,
     if reals1d_ft is float1d_t and reals2d_ft is float2d_t:
         if out is None:
             out = numpy.zeros((A.shape[0],), dtype='f')
-        C = <float*>out.data
+        cy.gemv(
+            cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
+            cy.NO_CONJUGATE,
+            A.shape[0], A.shape[1],
+            alpha,
+            &A[0,0], A.shape[1], 1,
+            &B[0], 1,
+            beta,
+            <float*>out.data, 1)
+        return out
     elif reals1d_ft is double1d_t and reals2d_ft is double2d_t:
         if out is None:
             out = numpy.zeros((A.shape[0],), dtype='d')
-        A_ptr = <double*>&A[0,0]
-        B_ptr = <double*>&B[0]
-        C = <double*>out.data
+        cy.gemv(
+            cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
+            cy.NO_CONJUGATE,
+            A.shape[0], A.shape[1],
+            alpha,
+            &A[0,0], A.shape[1], 1,
+            &B[0], 1,
+            beta,
+            <double*>out.data, 1)
+        return out
     else:
-        C = NULL
         raise TypeError("Unhandled fused type")
-    cy.gemv(
-        cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
-        cy.NO_CONJUGATE,
-        A.shape[0], A.shape[1],
-        alpha,
-        &A[0,0], A.shape[1], 1,
-        &B[0], 1,
-        beta,
-        &C[0], 1)
-    return out
-
 
 def dotv(reals1d_ft X, reals1d_ft Y, bint conjX=False, bint conjY=False):
     if X.shape[0] != Y.shape[0]:
