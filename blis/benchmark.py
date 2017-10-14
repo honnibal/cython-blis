@@ -13,50 +13,51 @@ def create_data(nO, nI, batch_size):
     return X, W
 
 
-def run_numpy(X, W):
+def get_numpy_blas():
+    blas_libs = numpy.__config__.blas_opt_info['libraries']
+    return blas_libs[0]
+
+
+def numpy_gemm(X, W, n=1000):
     nO, nI = W.shape
     batch_size = X.shape[0]
     total = 0.
     y = numpy.zeros((batch_size, nO), dtype='f')
-    for i in range(1000):
+    for i in range(n):
         numpy.dot(X, W, out=y)
         total += y.sum()
         y.fill(0)
-    print(total)
+    print('Total:', total)
 
 
-def run_blis(X, W):
+def blis_gemm(X, W, n=1000):
     nO, nI = W.shape
     batch_size = X.shape[0]
     total = 0.
     y = numpy.zeros((batch_size, nO), dtype='f')
-    for i in range(1000):
-        # Output dim: batch_size * nr_row
-        # vec dim:    batch_size * nr_col
-        # mat dim:    nr_row     * nr_col
-        # vec:   M * K
-        # mat.T: K * N
-        # out: M * N
+    for i in range(n):
         gemm(X, W, out=y)
         total += y.sum()
         y.fill(0.)
-    print(total)
+    print('Total:', total)
+
 
 def main(nI=128*3, nO=128*3, batch_size=2000):
-    print("Setting up data "
+    print("Setting up data for gemm "
           "nO={nO} nI={nI} batch_size={batch_size}".format(**locals()))
+    numpy_blas = get_numpy_blas()
     X1, W1 = create_data(nI, nO, batch_size)
     X2 = X1.copy()
     W2 = W1.copy()
     print("Blis...")
     start = timer()
-    run_blis(X2, W2)
+    blis_gemm(X2, W2)
     end = timer()
     blis_time = end-start
     print("%.2f seconds" % blis_time) 
-    print("Numpy...")
+    print("Numpy (%s)..." % numpy_blas)
     start = timer()
-    run_numpy(X1, W1)
+    numpy_gemm(X1, W1)
     end = timer()
     numpy_time = end-start
     print("%.2f seconds" % numpy_time) 
