@@ -1,10 +1,9 @@
 import numpy
 import numpy.random
-from .blis import gemm_
-from .blis import init
+from .py import gemm
 from timeit import default_timer as timer
 numpy.random.seed(0)
-init()
+
 
 def create_data(nO, nI, batch_size):
     X = numpy.zeros((batch_size, nI), dtype='f')
@@ -18,9 +17,11 @@ def run_numpy(X, W):
     nO, nI = W.shape
     batch_size = X.shape[0]
     total = 0.
+    y = numpy.zeros((batch_size, nO), dtype='f')
     for i in range(1000):
-        y = numpy.dot(X, W)
+        numpy.dot(X, W, out=y)
         total += y.sum()
+        y.fill(0)
     print(total)
 
 
@@ -36,12 +37,7 @@ def run_blis(X, W):
         # vec:   M * K
         # mat.T: K * N
         # out: M * N
-        gemm_(0, 0, batch_size, nO, nI,
-              1.0,
-              X, X.shape[1], 1,
-              W, W.shape[1], 1,
-              1.0,
-              y, y.shape[1], 1)
+        gemm(X, W, out=y)
         total += y.sum()
         y.fill(0.)
     print(total)
