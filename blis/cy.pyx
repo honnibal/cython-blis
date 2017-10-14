@@ -240,21 +240,6 @@ def get_int_type_size():
     cdef char* int_size = bli_info_get_int_type_size_str()
     return '%d' % int_size[0]
 
-def benchmark_gemm(float[:, ::1] A, float[:, ::1] B, float[:, ::1] C,
-                   int ntimes):
-    cdef float* a = &A[0,0]
-    cdef float* b = &B[0,0]
-    cdef float* c = &C[0,0]
-    cdef double scale = 1.0
-    for i in range(ntimes):
-        gemm[floats_t](NO_TRANSPOSE, NO_TRANSPOSE,
-            A.shape[0], B.shape[1], A.shape[1],
-        scale,
-        a, A.shape[1], 1,
-        b, B.shape[1], 1,
-        scale,
-        c, B.shape[1], 1)
-
 
 # BLAS level 3 routines
 cdef void gemm(
