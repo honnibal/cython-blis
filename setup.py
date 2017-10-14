@@ -31,14 +31,13 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext):
         blis_dir = os.path.dirname(e.sources[0])
         c_sources = get_c_sources(os.path.join(blis_dir, '_src', arch))
         include_dir = os.path.join(blis_dir, '_src', arch, 'include')
-        self.extensions.append(
-            Extension(
-                e.name,
-                e.sources + c_sources,
-                extra_compile_args=cflags,
-                extra_link_args=ldflags,
-                include_dirs=[numpy.get_include(), os.path.abspath(include_dir)],
-                undef_macros=["FORTIFY_SOURCE"]))
+        self.extensions.append(Extension(e.name, e.sources + c_sources))
+        for e in self.extensions:
+            e.extra_compile_args.extend(cflags)
+            e.extra_link_args.extend(ldflags),
+            e.include_dirs.append(numpy.get_include())
+            e.include_dirs.append(os.path.abspath(include_dir)),
+            e.undef_macros.append("FORTIFY_SOURCE")
         distutils.command.build_ext.build_ext.build_extensions(self)
     
     def get_arch_name(self):
@@ -101,7 +100,11 @@ c_files = get_c_sources(SRC)
 
 setup(
     setup_requires=['numpy'],
-    ext_modules=[Extension('blis.blis', ['blis/blis.c'])],
+    ext_modules=[
+        Extension('blis.cy', ['blis/cy.c']),
+        Extension('blis.py', ['blis/py.c']),
+
+    ],
     cmdclass={'build_ext': ExtensionBuilder},
     package_data={'': ['*.json', '*.pyx', '*.pxd', '_src/*/include/*.h'] + c_files},
 
