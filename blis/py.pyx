@@ -58,14 +58,17 @@ def ger(reals2d_ft A, reals1d_ft B, double scale=1., np.ndarray out=None):
 def gemm(reals2d_ft A, reals2d_ft B,
          np.ndarray out=None, bint trans1=False, bint trans2=False,
          double alpha=1., double beta=1.):
+    cdef cy.dim_t nM = A.shape[0] if not trans1 else A.shape[1]
+    cdef cy.dim_t nK = A.shape[1] if not trans1 else A.shape[0]
+    cdef cy.dim_t nN = B.shape[1] if not trans2 else B.shape[0]
     if reals2d_ft is float2d_t:
         if out is None:
-            out = numpy.zeros((A.shape[0], B.shape[1]), dtype='f')
+            out = numpy.zeros((nM, nN), dtype='f')
         C = <float*>out.data
         cy.gemm(
             cy.TRANSPOSE if trans1 else cy.NO_TRANSPOSE,
             cy.TRANSPOSE if trans2 else cy.NO_TRANSPOSE,
-            A.shape[0], B.shape[1], A.shape[1],
+	    nM, nN, nK,
             alpha,
             &A[0,0], A.shape[1], 1,
             &B[0,0], B.shape[1], 1,
