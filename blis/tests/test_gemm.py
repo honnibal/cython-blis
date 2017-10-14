@@ -3,8 +3,8 @@ from hypothesis import given, assume
 from math import sqrt, floor
 
 from .common import *
-from .. import gemm
-from ..blis import NO_TRANSPOSE, TRANSPOSE
+from ..py import gemm
+
 
 def _stretch_matrix(data, m, n):
     orig_len = len(data)
@@ -24,7 +24,7 @@ def _reshape_for_gemm(A, B, a_rows, a_cols, out_cols, dtype, trans_a=False, tran
     B = np.ascontiguousarray(B.flatten()[:a_cols*b_cols], dtype=dtype)
     B = B.reshape((a_cols, b_cols))
     out_cols = B.shape[1]
-    C = np.zeros(shape=(A.shape[0], B.shape[1],), dtype=dtype)
+    C = np.zeros(shape=(A.shape[0], B.shape[1]), dtype=dtype)
     if trans_a:
         A = np.ascontiguousarray(A.T, dtype=dtype)
     return A, B, C
@@ -43,17 +43,12 @@ def test_memoryview_double_notrans(A, B, a_rows, a_cols, out_cols):
     assume(A is not None)
     assume(B is not None)
     assume(C is not None)
-    gemm(0, 0,
-        A.shape[0], B.shape[1], A.shape[1],
-        1.0,
-        np.ascontiguousarray(A, dtype='float64'), A.shape[1], 1,
-        np.ascontiguousarray(B, dtype='float64'), B.shape[1], 1,
-        1.0,
-        C, B.shape[1], 1)
-    my_result = C.reshape((A.shape[0], B.shape[1]))
-
+    assume(A.size >= 1)
+    assume(B.size >= 1)
+    assume(C.size >= 1)
+    gemm(A, B, out=C)
     numpy_result = A.dot(B)
-    assert_allclose(numpy_result, my_result, atol=1e-4, rtol=1e-4)
+    assert_allclose(numpy_result, C, atol=1e-4, rtol=1e-4)
 
 
 @given(
@@ -69,14 +64,9 @@ def test_memoryview_float_notrans(A, B, a_rows, a_cols, out_cols):
     assume(A is not None)
     assume(B is not None)
     assume(C is not None)
-    gemm(0, 0,
-        A.shape[0], B.shape[1], A.shape[1],
-        1.0,
-        np.ascontiguousarray(A, dtype='float32'), A.shape[1], 1,
-        np.ascontiguousarray(B, dtype='float32'), B.shape[1], 1,
-        1.0,
-        C, B.shape[1], 1)
-    my_result = C.reshape((A.shape[0], B.shape[1]))
-
+    assume(A.size >= 1)
+    assume(B.size >= 1)
+    assume(C.size >= 1)
+    gemm(A, B, out=C)
     numpy_result = A.dot(B)
-    assert_allclose(numpy_result, my_result, atol=1e-3, rtol=1e-3)
+    assert_allclose(numpy_result, C, atol=1e-3, rtol=1e-3)
