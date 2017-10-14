@@ -3,8 +3,8 @@ from hypothesis import given, assume
 from math import sqrt, floor
 
 from .common import *
-from .. import dotv
-from ..blis import NO_CONJUGATE, CONJUGATE
+from ..py import dotv
+from ..cy import NO_CONJUGATE, CONJUGATE
 
 
 @given(
@@ -20,11 +20,8 @@ def test_memoryview_double_noconj(A, B):
         A = A[:len(B)]
     assume(A is not None)
     assume(B is not None)
-    result = dotv(0, 0,
-        A.shape[0],
-        A, B,
-        1, 1,)
     numpy_result = A.dot(B)
+    result = dotv(A, B)
     assert_allclose([numpy_result], result, atol=1e-4, rtol=1e-4)
 
 
@@ -34,16 +31,13 @@ def test_memoryview_double_noconj(A, B):
     ndarrays(min_len=10, max_len=100,
              min_val=-100.0, max_val=100.0, dtype='float32'),
 )
-def test_memoryview_double_noconj(A, B):
+def test_memoryview_float_noconj(A, B):
     if len(A) < len(B):
         B = B[:len(A)]
     else:
         A = A[:len(B)]
     assume(A is not None)
     assume(B is not None)
-    result = dotv(0, 0,
-        A.shape[0],
-        A, B,
-        1, 1,)
     numpy_result = A.dot(B)
+    result = dotv(A, B)
     assert_allclose([numpy_result], result, atol=1e-4, rtol=1e-4)
