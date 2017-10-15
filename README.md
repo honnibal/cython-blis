@@ -7,7 +7,7 @@ machine's architecture via an environment variable:
     
     BLIS_ARCH=haswell pip install blis
 
-After installation, run a simple matrix multiplication benchmark:
+After installation, run a small matrix multiplication benchmark:
 
     $ python -m blis.benchmark    
     Setting up data nO=384 nI=384 batch_size=2000. Running 1000 iterations
@@ -17,6 +17,11 @@ After installation, run a simple matrix multiplication benchmark:
     Numpy (Openblas)...
     Total: 11032016.6016
     16.81 seconds
+    Blis einsum ab,cb->ca
+    8.10 seconds
+    Numpy (openblas) einsum ab,cb->ca
+    Total: 5510596.19141
+    83.18 seconds
 
 This is on a Dell XPS 13 i7-7500U. Running the same benchmark on a 2015 Macbook
 Air gives:  
@@ -30,33 +35,55 @@ Air gives:
                             
 It might be that Openblas is performing poorly on the relatively small
 matrices (which are typically the sizes I'm working with for my neural
-network models). 
+network models).
 
 Usage
 -----
 
-You can call the Python bindings with any object that exposes the buffer
-interface, e.g. numpy arrays:
+Two APIs are provided: a high-level Python API, and direct Cython access. The
+best part of the Python API is the
+[https://obilaniu6266h16.wordpress.com/2016/02/04/einstein-summation-in-numpy/](
+einsum function), which works like numpy's, but with some restrictions that allow
+a direct mapping to Blis routines. Example usage:
 
-    from blis.py import gemm
+    from blis.py import einsum
     from numpy import ndarray, zeros
 
-    nN = 500 # e.g. batch size
-    nI = 128 # e.g. input dimension
-    nO = 300 # e.g. output dimension
-    A = ndarray((nN, nI), dtype='f') e.g. input data X
-    B = ndarray((nI, nO), dtype='f') e.g. weights W
-    C = gemm(A, B) # e.g. Y = X.dot(W)
-    # If you already have an output buffer, you can avoid extra allocations.
-    gemm(A, B, out=C)
-    # Arrays must be C-contiguous
-    # gemm(A, B.T, out=C, transB=True) <-- Raises TypeError
-    B_T = numpy.ascontiguousarray(B.T)
-    gemm(A, B_T, out=C, transB=True)
+    dim_a = 500
+    dim_b = 128
+    dim_c = 300
+    arr1 = ndarray((dim_a, dim_b))
+    arr2 = ndarray((dim_b, dim_c))
+    out = zeros((dim_a, dim_c))
 
-The library also provides fused-type, nogil Cython bindings. Fused types are
-a simple template mechanism, allowing just a touch of compile-time generic
-programming:
+    einsum('ab,bc->ac', arr1, arr2, out=out)
+    # Change dimension order of output
+    out = einsum('ab,bc->ca', arr1, arr2)
+    assert out.shape == (dim_a, dim_c)
+    # Matrix vector product, with transposed output
+    arr2 = ndarray((dim_b,))
+    out = einsum('ab,b->ba', arr1, arr2)
+    assert out.shape == (dim_b, dim_a)
+
+The Einstein summation format is really awesome, so it's always been
+disappointing that it's so much slower than equivalent calls to tensordot
+in numpy. The blis.einsum function gives up the numpy version's generality,
+so that calls can be easily mapped to Blis:
+
+* Only two input tensors 
+* Maximum two dimensions
+* Dimensions must be labelled a, b and c
+* The first argument's dimensions must be 'a' (for 1d inputs) or 'ab' (for 2d
+  inputs).
+
+With these restrictions, there are ony 15 valid combinations --- which
+correspond to all the things you would otherwise do with the gemm, gemv, ger
+and axpy functions. You can therefore forget about all the other functions
+and just use the einsum.
+
+We also provide fused-type, nogil Cython bindings to the underlying
+Blis linear algebra library. Fused types are a simple template mechanism,
+allowing just a touch of compile-time generic programming:
 
     cimport blis.cy
     A = <float*>calloc(nN * nI, sizeof(float))
@@ -70,4 +97,3 @@ programming:
 
 Bindings have been added as we've needed them. Please submit pull requests if
 the library is missing some functions you require.
-
